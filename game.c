@@ -18,8 +18,12 @@
   
   @file:    game.c                                                                                                           
   @author:  Victor Neville 
-  @description: The program simulates a virtual casino with a simple cards game.                                                                                             
-  @date:    29/5/2014                                                                                                                                                                                             
+  @description: The program simulates a virtual casino with a simple cards game.
+				The user must place a bet and he must guess the queen position.
+				If the user got wrong, he loses his bet, otherwise he wins 
+				3 times the amount of the bet. 
+				When user's cash gets equal to zero, the program ends.                                                                                             
+  @date: 29/5/2014                                                                                                                                                                                             
 ******************************************************************************/
 
 /* avoiding warnings of fprintf and fscanf on windows */
@@ -56,7 +60,7 @@
 #define GUESS_MSG     "\nEnter the queen position (1, 2 or 3): "
 #define RESULT_MSG    "\nResult = %c, %c, %c\ncash = %d$\n"
 
-typedef enum { BET, GUESS } input_type_t;
+typedef enum { BET, GUESS } input_t;
 
 /******************************************************************************
  @name: get_bet
@@ -64,16 +68,17 @@ typedef enum { BET, GUESS } input_type_t;
  @parameters:
  - int: min value
  - int: max value
+ - input_t: input type
  @return: an integer value between min and max                                                                                
 ******************************************************************************/
-int get_int(int min, int max, input_type_t input_type)
+int get_int(int min, int max, input_t input)
 {
     int val;
     
     do {
 		CLEAR_SCREEN;
 
-		switch (input_type) {
+		switch (input) {
 		case BET:
 			fprintf(stdout, BET_MSG, max);
 			break;
@@ -109,10 +114,10 @@ int main()
 	char buf[N] = { JACK, QUEEN, KING };
 	int i, guess, bet, cash = INITIAL_CASH;
 
-	srand((unsigned int)time(NULL));
+	srand((unsigned)time(NULL));
 
 	while (cash) {
-		bet = get_int(0, cash, BET);
+		bet = get_int(1, cash, BET);
 		
 		fprintf(stdout, "\nShuffling ...\n");
 		SLEEP(DELAY);
@@ -126,6 +131,7 @@ int main()
 		/* update cash */
 		cash += buf[guess-1] == QUEEN ? N*bet : -bet; 
 		
+		/* display results */
 		fprintf(stdout, RESULT_MSG, buf[0], buf[1], buf[2], cash);
 		SLEEP(DELAY * 2);
 	}
