@@ -116,7 +116,7 @@ int main()
 
 	srand((unsigned)time(NULL));
 
-	while (cash) {
+	while (cash > 0) {
 		bet = get_int(1, cash, BET);
 		
 		fprintf(stdout, "\nShuffling ...\n");
@@ -129,7 +129,7 @@ int main()
 		guess = get_int(1, N, GUESS);
 
 		/* update cash */
-		cash += buf[guess-1] == QUEEN ? N*bet : -bet; 
+		cash += (buf[guess-1] == QUEEN) ? N*bet : -bet; 
 		
 		/* display results */
 		fprintf(stdout, RESULT_MSG, buf[0], buf[1], buf[2], cash);
